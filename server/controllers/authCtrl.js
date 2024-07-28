@@ -7,9 +7,15 @@ export const registerCtrl = async (req, res, next) => {
     if (!username || !email || !password) {
       return next(new AppError("Please enter all fields", 400));
     }
+    if (password.length < 6) {
+      return next(new AppError("Password must be at least 6 characters", 400));
+    }
+    if (username.length < 7) {
+      return next(new AppError("Username must be at least 7 characters", 400));
+    }
     const findUser = await User.findOne({ email });
     if (findUser) {
-      return next(new AppError("User already exists", 400));
+      return next(new AppError("Email already exists", 400));
     }
     const findUsername = await User.findOne({ username });
     if (findUsername) {
