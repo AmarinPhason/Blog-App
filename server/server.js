@@ -5,6 +5,7 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import { connectDB } from "./database/connectDB.js";
+import authRouter from "./routes/authRoute.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -27,6 +28,8 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.use(`${API_BASE}/auth`, authRouter);
 
 app.listen(PORT, async () => {
   await connectDB();
