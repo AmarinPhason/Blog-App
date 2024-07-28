@@ -2,9 +2,11 @@ import React from "react";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function OAuth() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
@@ -26,6 +28,8 @@ export default function OAuth() {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to login");
       }
+
+      login(email, displayName, photoURL);
       console.log("Login successful:", response);
 
       navigate("/");

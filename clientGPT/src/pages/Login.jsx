@@ -1,12 +1,15 @@
+// pages/Login.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,6 +32,7 @@ export default function Login() {
 
       console.log("Login successful:", data);
       setError(null); // Clear the error if login is successful
+      login(); // Set login status
       navigate("/"); // Navigate to the home page after successful login
     } catch (error) {
       setError(error.message); // Set error message
@@ -84,7 +88,6 @@ export default function Login() {
             Login
           </button>
           <div className="mt-2">
-            {" "}
             <OAuth />
           </div>
         </form>

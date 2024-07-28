@@ -100,3 +100,14 @@ export const googleLoginCtrl = async (req, res, next) => {
     next(error);
   }
 };
+
+export const logoutCtrl = async (req, res, next) => {
+  try {
+    res
+      .status(200)
+      .clearCookie("access_token", setCookieOptions())
+      .json({ message: "Logout successful" });
+  } catch (error) {
+    next(error);
+  }
+};
