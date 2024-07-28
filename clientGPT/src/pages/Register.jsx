@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -115,6 +116,10 @@ export default function Register() {
           >
             Register
           </button>
+          <div className="mt-2">
+            {" "}
+            <OAuth />
+          </div>
         </form>
         <p className="mt-4 text-center text-gray-600">
           Have an account?{" "}

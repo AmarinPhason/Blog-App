@@ -58,3 +58,45 @@ export const loginCtrl = async (req, res, next) => {
     next(error);
   }
 };
+
+// controller.js
+export const googleLoginCtrl = async (req, res, next) => {
+  const { email, displayName, photoURL } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+
+    if (user) {
+      const token = user.generateToken();
+      return res
+        .status(200)
+        .cookie("access_token", token, setCookieOptions())
+        .json({
+          message: "Login successful",
+          data: user,
+          token,
+        });
+    }
+
+    if (!user) {
+      user = new User({
+        username: displayName,
+        password: email + process.env.JWT_SECRET,
+        email,
+        picture: { url: photoURL },
+      });
+
+      await user.save();
+    }
+
+    const token = user.generateToken();
+    res.status(200).cookie("access_token", token, setCookieOptions()).json({
+      message: "Login successful",
+      data: user,
+      token,
+    });
+  } catch (error) {
+    console.error("Error during Google login:", error); // เพิ่มการ log error
+    next(error);
+  }
+};
