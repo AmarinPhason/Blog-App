@@ -6,6 +6,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import { connectDB } from "./database/connectDB.js";
 import authRouter from "./routes/authRoute.js";
+import { errorHandler, routeNotFound } from "./middlewares/errorHandler.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -30,6 +31,10 @@ app.get("/", (req, res) => {
 });
 
 app.use(`${API_BASE}/auth`, authRouter);
+
+// Error Handling
+app.use(routeNotFound);
+app.use(errorHandler);
 
 app.listen(PORT, async () => {
   await connectDB();
