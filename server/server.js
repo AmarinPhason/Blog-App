@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+import { connectDB } from "./database/connectDB.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -28,5 +29,6 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, async () => {
+  await connectDB();
   console.log(`"Server is running on http://localhost:${PORT}"`);
 });
