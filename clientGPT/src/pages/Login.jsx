@@ -1,12 +1,47 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const user = { email, password };
+
+    try {
+      const response = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to login");
+      }
+
+      console.log("Login successful:", data);
+      setError(null); // Clear the error if login is successful
+      navigate("/"); // Navigate to the home page after successful login
+    } catch (error) {
+      setError(error.message); // Set error message
+      console.error("Error:", error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form>
+        {error && <div className="text-red-500 mb-4">{error}</div>}{" "}
+        {/* Show error message */}
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -20,6 +55,8 @@ export default function Login() {
               name="email"
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-6">
@@ -35,6 +72,8 @@ export default function Login() {
               name="password"
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <button
